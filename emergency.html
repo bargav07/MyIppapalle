@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emergency Contacts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe5e5, #fff);
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+      text-align: center;
+      color: #c0392b;
+      margin-bottom: 30px;
+    }
+
+    .contact-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      background-color: #fefefe;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .contact-card:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-info {
+      flex: 1;
+    }
+
+    .contact-info h4 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    .contact-info p {
+      margin: 3px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .call-btn, .whatsapp-btn {
+      padding: 10px 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .call-btn {
+      background-color: #2ecc71;
+    }
+
+    .whatsapp-btn {
+      background-color: #25D366;
+    }
+
+    .call-btn:hover, .whatsapp-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .contact-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .buttons {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><i class="fas fa-phone-volume"></i> Emergency Contacts</h2>
+
+    <!-- Contact 1 -->
+    <div class="contact-card">
+      <div class="contact-info">
+        <h4>Police Station</h4>
+        <p>📞 +91 100</p>
+      </div>
+      <div class="buttons">
+        <a href="tel:100"><button class="call-btn"><i class="fas fa-phone"></i></button></a>
+        <button class="whatsapp-btn" onclick="sendWhatsApp('919876543210', 'Urgent help needed!')">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contact 2 -->
+    <div class="contact-card">
+      <div class="contact-info">
+        <h4>Fire Department</h4>
+        <p>📞 +91 101</p>
+      </div>
+      <div class="buttons">
+        <a href="tel:101"><button class="call-btn"><i class="fas fa-phone"></i></button></a>
+        <button class="whatsapp-btn" onclick="sendWhatsApp('919123456789', 'Fire emergency assistance needed!')">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contact 3 -->
+    <div class="contact-card">
+      <div class="contact-info">
+        <h4>Medical Emergency</h4>
+        <p>📞 +91 102</p>
+      </div>
+      <div class="buttons">
+        <a href="tel:102"><button class="call-btn"><i class="fas fa-phone"></i></button></a>
+        <button class="whatsapp-btn" onclick="sendWhatsApp('919998877665', 'Medical help needed urgently!')">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function sendWhatsApp(phone, message) {
+      const encodedMessage = encodeURIComponent(message);
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      let url = "";
+
+      if (isAndroid) {
+        url = `intent://send?phone=${phone}&text=${encodedMessage}#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end`;
+      } else {
+        url = `https://wa.me/${phone}?text=${encodedMessage}`;
+      }
+
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

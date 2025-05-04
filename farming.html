@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farming Advisory</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Basic Reset and Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+      color: #333;
+      overflow-x: hidden;
+      animation: backgroundMove 10s infinite alternate;
+    }
+
+    /* Header Styling */
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 2s ease-out;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 1200px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    section:hover {
+      transform: scale(1.02);
+    }
+
+    h2 {
+      color: #4CAF50;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      animation: slideIn 1s ease-out;
+    }
+
+    /* Button Styling */
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+
+    /* Animation for Background Movement */
+    @keyframes backgroundMove {
+      0% { background-position: top left; }
+      100% { background-position: bottom right; }
+    }
+
+    /* Slide In Animation */
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Fade In Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Weather Info Section */
+    .weather-info {
+      background-color: #f2f2f2;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+
+    .weather-info i {
+      font-size: 2rem;
+      color: #4CAF50;
+    }
+
+    .weather-info p {
+      margin: 0;
+    }
+
+    /* Footer Styling */
+    footer {
+      text-align: center;
+      background-color: #333;
+      color: white;
+      padding: 15px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+
+    /* Links Styling */
+    a {
+      color: #4CAF50;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    Farming Advisory Page
+  </header>
+
+  <!-- Seasonal Crops and Fertilizers Section -->
+  <section id="crop-section">
+    <h2>🌾 Seasonal Crops & Fertilizer Recommendations</h2>
+    <div class="crop-info">
+      <h3>Recommended Crops for the Season</h3>
+      <ul>
+        <li><strong>Rice:</strong> Best planted during the rainy season (June to September)</li>
+        <li><strong>Wheat:</strong> Ideal for planting in winter (October to December)</li>
+        <li><strong>Maize (Corn):</strong> Grows well in summer (March to June)</li>
+        <li><strong>Soybean:</strong> Plant in monsoon season (June to August)</li>
+      </ul>
+    </div>
+
+    <div class="fertilizer-info">
+      <h3>Fertilizer Suggestions</h3>
+      <ul>
+        <li><strong>Rice:</strong> Apply NPK 15:15:15 for healthy growth</li>
+        <li><strong>Wheat:</strong> Use Urea and DAP fertilizers for optimal yield</li>
+        <li><strong>Maize:</strong> Apply Nitrogen-rich fertilizers for better growth</li>
+        <li><strong>Soybean:</strong> Use organic manure for improved soil health</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Weather Section -->
+  <section id="weather-section">
+    <h2>🌦️ Real-Time Weather Updates</h2>
+    <button class="button" onclick="getWeather()">Get Weather Information</button>
+    <div class="weather-info" id="weather-info">
+      <!-- Weather info will be dynamically inserted here -->
+    </div>
+  </section>
+
+  <!-- Government Assistance Section -->
+  <section id="gov-assistance-section">
+    <h2>🌱 Government Assistance & Soil Testing</h2>
+    <p>For soil testing and farming assistance, check the following government portals:</p>
+    <ul>
+      <li><a href="https://www.soilhealth.dac.gov.in/" target="_blank">Soil Health Portal</a></li>
+      <li><a href="https://pmkisan.gov.in/" target="_blank">PM Kisan Portal</a></li>
+    </ul>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Farming Advisory | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    // Function to get the user's location and fetch weather info
+    function getWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showWeather, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    // Show weather based on geolocation
+    function showWeather(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      // Using OpenWeatherMap API (replace 'YOUR_API_KEY' with your actual API key)
+      const apiKey = 'YOUR_API_KEY';
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const weather = data.weather[0].description;
+          const temp = data.main.temp;
+          document.getElementById('weather-info').innerHTML = `
+            <i class="fas fa-sun"></i>
+            <p><strong>Temperature:</strong> ${temp}°C</p>
+            <p><strong>Condition:</strong> ${weather}</p>
+          `;
+        })
+        .catch(error => {
+          document.getElementById('weather-info').innerHTML = "<p>Unable to fetch weather data.</p>";
+        });
+    }
+
+    // Error handling in case of geolocation failure
+    function showError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          alert("User denied the request for Geolocation.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Location information is unavailable.");
+          break;
+        case error.TIMEOUT:
+          alert("The request to get user location timed out.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred.");
+          break;
+      }
+    }
+  </script>
+
+</body>
+</html>

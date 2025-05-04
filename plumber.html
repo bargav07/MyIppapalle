@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rent a Plumber</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #c9e4f3, #ffffff);
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 450px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      font-weight: 500;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #0078d4;
+      box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
+    }
+
+    button {
+      width: 100%;
+      background: #0078d4;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+
+    .field-icon {
+      margin-right: 8px;
+      color: #0078d4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><i class="fas fa-wrench"></i> Rent a Plumber</h2>
+
+    <label for="plumber"><i class="fas fa-user field-icon"></i>Choose Plumber:</label>
+    <select id="plumber">
+      <option value="">Select...</option>
+      <option value="919888877776">Ravi Plumber (📞 +91 98888 77776)</option>
+      <option value="919777766665">Suresh Plumbing Co. (📞 +91 97777 66665)</option>
+    </select>
+
+    <label for="name"><i class="fas fa-user-tag field-icon"></i>Your Name:</label>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <label for="address"><i class="fas fa-map-marker-alt field-icon"></i>Address:</label>
+    <textarea id="address" rows="2" placeholder="Enter your address"></textarea>
+
+    <label for="issue"><i class="fas fa-toilet field-icon"></i>Plumbing Issue:</label>
+    <textarea id="issue" rows="3" placeholder="Describe the plumbing issue"></textarea>
+
+    <button onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+  </div>
+
+  <script>
+    function sendWhatsApp() {
+      const phone = document.getElementById('plumber').value;
+      const name = document.getElementById('name').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const issue = document.getElementById('issue').value.trim();
+
+      if (!phone || !name || !address || !issue) {
+        alert("Please fill in all fields and select a plumber.");
+        return;
+      }
+
+      const message = `Hello, I need plumbing assistance.\n\nName: ${name}\nAddress: ${address}\nIssue: ${issue}`;
+      const encodedMessage = encodeURIComponent(message);
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      let url = "";
+
+      if (isAndroid) {
+        url = `intent://send?phone=${phone}&text=${encodedMessage}#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end`;
+      } else {
+        url = `https://wa.me/${phone}?text=${encodedMessage}`;
+      }
+
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
