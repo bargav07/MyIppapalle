@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Ippapalle</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3rem;
+      color: #00ff88;
+    }
+    .about {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.4);
+      margin: 1rem;
+      border-radius: 10px;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem;
+    }
+    .menu a {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      min-width: 150px;
+      font-size: 1rem;
+      backdrop-filter: blur(5px);
+      transition: transform 0.2s ease;
+    }
+    .menu a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
+    }
+    .menu i {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .scroll-section {
+      max-height: 200px;
+      overflow: hidden;
+      position: relative;
+      margin: 2rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+    }
+    .scroll-section h2 {
+      margin-top: 0;
+      color: #00ffdd;
+    }
+    .scroll-content {
+      animation: scroll-up 15s linear infinite;
+    }
+    @keyframes scroll-up {
+      0% { transform: translateY(100%); }
+      100% { transform: translateY(-100%); }
+    }
+    .complaint-section {
+      margin: 2rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+    }
+    .complaint-section h2 {
+      color: #ffaa00;
+    }
+    #complaintInput {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    #submitComplaint {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #00cc99;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    #submitComplaint:hover {
+      background-color: #009977;
+    }
+    .complaints-list {
+      max-height: 200px;
+      overflow: hidden;
+      position: relative;
+      background: rgba(0, 0, 0, 0.4);
+      margin: 2rem;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .complaints-scroll {
+      animation: scroll-up 15s linear infinite;
+    }
+    .complaints-scroll p {
+      margin: 0.5rem 0;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome</h1>
+  </header>
+
+  <section class="about">
+    <h2>About Ippapalle</h2>
+    <p>Ippapalle is a vibrant village surrounded by lush greenery and a close-knit community.</p>
+  </section>
+
+  <section class="menu">
+    <a href="#complaint"><i class="fas fa-comment-dots"></i>Raise a Complaint</a>
+    <a href="donate.html"><i class="fas fa-donate"></i>Donate Funds</a>
+    <a href="#"><i class="fas fa-people-carry"></i>Hire Workers</a>
+    <a href="#"><i class="fas fa-seedling"></i>Agriculture Help</a>
+    <a href="hire-cab.html"><i class="fas fa-car"></i>Hire Cab</a>
+    <a href="#"><i class="fas fa-drumstick-bite"></i>Order Meat</a>
+    <a href="#"><i class="fas fa-bolt"></i>Hire Electrician</a>
+    <a href="#"><i class="fas fa-wrench"></i>Hire Plumber</a>
+    <a href="#"><i class="fas fa-users"></i>Development Members</a>
+    <a href="#"><i class="fas fa-phone-alt"></i>Emergency Contacts</a>
+  </section>
+
+  <section class="scroll-section">
+    <h2>📢 Village Updates</h2>
+    <div class="scroll-content">
+      <p>📌 New water tank construction approved - starts next week!</p>
+      <p>📌 Village cleaning drive on Sunday at 7 AM – join us!</p>
+      <p>📌 Panchayat meeting scheduled for Monday, 10 AM.</p>
+      <p>📌 Govt. seeds distribution begins this Friday.</p>
+    </div>
+  </section>
+
+  <section class="scroll-section">
+    <h2>📅 Upcoming Events</h2>
+    <div class="scroll-content">
+      <p>🎉 Dasara Celebration - Oct 15, 6 PM @ Community Hall</p>
+      <p>🎭 Cultural Night - Oct 20, 7 PM @ School Grounds</p>
+      <p>📖 Free Medical Camp - Oct 22, 9 AM to 3 PM</p>
+      <p>🌱 Tree Plantation Drive - Oct 25, 8 AM onwards</p>
+    </div>
+  </section>
+
+  <section class="complaint-section" id="complaint">
+    <h2>📝 Raise a Complaint</h2>
+    <input type="text" id="complaintInput" placeholder="Type your complaint here..." />
+    <button id="submitComplaint">Submit</button>
+  </section>
+
+  <section class="complaints-list">
+    <h2>📬 Recent Complaints</h2>
+    <div class="complaints-scroll" id="complaintsDisplay">
+      <!-- New complaints will appear here -->
+    </div>
+  </section>
+
+  <footer>
+    😎 Credits: Deshaveni Bhargav.<br>
+    &copy; 2025 My Ippapalle. All rights reserved.
+  </footer>
+
+  <script>
+    const input = document.getElementById("complaintInput");
+    const button = document.getElementById("submitComplaint");
+    const display = document.getElementById("complaintsDisplay");
+
+    button.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (text) {
+        const para = document.createElement("p");
+        para.textContent = "📌 " + text;
+        display.appendChild(para);
+        input.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
