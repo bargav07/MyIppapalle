@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Ippapalle</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-storage-compat.js"></script>
+  <style>
+    :root {
+      --primary-color: #00ff88;
+      --secondary-color: #00f5ff;
+      --accent-color: #ff6347;
+      --dark-bg: linear-gradient(145deg, #141e30 0%, #243b55 100%);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: var(--dark-bg);
+      color: white;
+      min-height: 100vh;
+    }
+
+    /* Animated background overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,99,71,0.1) 0%, rgba(0,255,136,0.1) 100%);
+      z-index: -1;
+      animation: gradientShift 20s ease infinite;
+    }
+
+    header {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+      animation: slideDown 0.8s ease;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin: 0;
+      font-weight: 500;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--secondary-color);
+      transform: scaleX(0);
+      animation: titleUnderline 1.5s ease forwards 1s;
+    }
+
+    /* Enhanced Navigation */
+    nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+      background: linear-gradient(145deg, rgba(0,0,0,0.7) 0%, rgba(40,60,80,0.7) 100%);
+      margin: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      animation: fadeInUp 1s ease;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent);
+      transition: 0.6s;
+    }
+
+    nav a:hover::before {
+      left: 100%;
+    }
+
+    nav a:hover {
+      background: rgba(var(--primary-color), 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,255,136,0.3);
+    }
+
+    /* Enhanced Sections */
+    section {
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
+      animation: scaleUp 0.8s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--secondary-color);
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: var(--primary-color);
+      border-radius: 2px;
+    }
+
+    /* Enhanced Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .gallery img:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,255,136,0.3);
+    }
+
+    /* Enhanced Form Elements */
+    .complaint-section input {
+      width: 70%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .complaint-section input:focus {
+      border-color: var(--primary-color);
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    }
+
+    .complaint-section button {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #00cc99 100%);
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,255,136,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .complaint-section button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,255,136,0.4);
+    }
+
+    /* New Animations */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes titleUnderline {
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Enhanced Mobile Styles */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      nav {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.8rem;
+        padding: 1rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .complaint-section input {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      .complaint-section button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Welcome to Ippapalle</h1>
+    <select id="languageSelector">
+      <option value="en">English</option>
+      <option value="te">తెలుగు</option>
+    </select>
+  </header>
+
+  <nav>
+    <a href="#complaint" id="nav-complaint"><i class="fas fa-comment-dots" style="color: #ff6347;"></i> <span>Raise Complaint</span></a>
+    <a href="donate.html"><i class="fas fa-donate" style="color: #ffda44;"></i> <span>Donate</span></a>
+    <a href="workers.html"><i class="fas fa-people-carry" style="color: #66ccff;"></i> <span>Rent Workers</span></a>
+    <a href="farming.html"><i class="fas fa-seedling" style="color: #66ff66;"></i> <span>Farming</span></a>
+    <a href="hire-cab.html"><i class="fas fa-car" style="color: #ff4500;"></i> <span>Rent Car</span></a>
+    <a href="meat.html"><i class="fas fa-drumstick-bite" style="color: #ff6347;"></i> <span>Order Meat</span></a>
+    <a href="electrician.html"><i class="fas fa-bolt" style="color: #ffcc00;"></i> <span>Electrician</span></a>
+    <a href="plumber.html"><i class="fas fa-wrench" style="color: #00bfff;"></i> <span>Plumber</span></a>
+    <a href="members.html"><i class="fas fa-users" style="color: #ff69b4;"></i> <span>Development Members</span></a>
+    <a href="emergency.html"><i class="fas fa-phone-alt" style="color: #ff1493;"></i> <span>Emergency</span></a>
+  </nav>
+
+  <section>
+    <h2 id="villageUpdatesTitle">📢 Village Updates</h2>
+    <div class="scroll-box">
+      <div class="scroll-content" id="villageUpdates"></div>
+    </div>
+    <div id="adminUpdateForm" class="admin-form" style="display: none;">
+      <h3>Add New Update</h3>
+      <textarea id="updateEn" placeholder="English update"></textarea>
+      <textarea id="updateTe" placeholder="Telugu update"></textarea>
+      <button onclick="addUpdate()">Add Update</button>
+    </div>
+  </section>
+
+  <section id="events">
+    <h2>🎉 Upcoming Events</h2>
+    <div class="scroll-box">
+      <div class="scroll-content" id="eventsList"></div>
+    </div>
+    <div id="adminEventForm" class="admin-form" style="display: none;">
+      <h3>Add New Event</h3>
+      <input type="date" id="eventDate">
+      <textarea id="eventEn" placeholder="English description"></textarea>
+      <textarea id="eventTe" placeholder="Telugu description"></textarea>
+      <button onclick="addEvent()">Add Event</button>
+    </div>
+  </section>
+
+  <section id="complaint">
+    <h2>📝 Raise a Complaint</h2>
+    <div class="complaint-section">
+      <input type="text" id="complaintInput" placeholder="Enter your complaint here..." />
+      <button onclick="submitComplaint()">Submit Complaint</button>
+    </div>
+    <div id="complaintList"></div>
+  </section>
+
+  <section>
+    <h2>📸 Village Gallery</h2>
+    <div class="gallery" id="gallery"></div>
+    <div id="adminGalleryForm" class="admin-form" style="display: none;">
+      <h3>Upload Image</h3>
+      <input type="file" id="imageUpload" accept="image/*">
+      <button onclick="uploadImage()">Upload Image</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Ippapalle Village. All rights reserved.|😎Deshaveni Bhargav</p>
+  </footer>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD50fL2jRrx_ha19vnEqGUSDjgeFyouStM",
+      authDomain: "ippapalle-website.firebaseapp.com",
+      projectId: "ippapalle-website",
+      storageBucket: "ippapalle-website.appspot.com",
+      messagingSenderId: "986931914862",
+      appId: "1:986931914862:web:a4b1631ae6a20a11e69e7f"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // DOM Elements
+    const languageSelector = document.getElementById('languageSelector');
+    const complaintInput = document.getElementById('complaintInput');
+    const complaintList = document.getElementById('complaintList');
+    const navComplaint = document.getElementById('nav-complaint');
+
+    // Check for admin access
+    const isAdmin = window.location.search.includes('admin=true');
+    if (isAdmin) {
+      document.querySelectorAll('.admin-form').forEach(form => {
+        form.style.display = 'block';
+      });
+    }
+
+    // Load all content
+    function loadContent(lang = 'en') {
+      loadUpdates(lang);
+      loadEvents(lang);
+      loadComplaints();
+      loadGallery();
+    }
+
+    // ========== VILLAGE UPDATES ========== //
+    function loadUpdates(lang) {
+      db.collection("updates")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) => {
+          const container = document.getElementById('villageUpdates');
+          container.innerHTML = '';
+          
+          if (snapshot.empty) {
+            container.innerHTML = '<p>No updates available</p>';
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const update = doc.data();
+            const updateElement = document.createElement('p');
+            updateElement.textContent = update[lang] || update.en || 'No content available';
+            
+            if (isAdmin) {
+              const deleteBtn = document.createElement('button');
+              deleteBtn.textContent = 'Delete';
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.onclick = () => deleteUpdate(doc.id);
+              
+              updateElement.appendChild(document.createElement('br'));
+              updateElement.appendChild(deleteBtn);
+            }
+            
+            container.appendChild(updateElement);
+          });
+        }, (error) => {
+          console.error("Updates error:", error);
+          document.getElementById('villageUpdates').innerHTML = 
+            '<p>Error loading updates. Please try again.</p>';
+        });
+    }
+
+    async function addUpdate() {
+      const enText = document.getElementById('updateEn').value.trim();
+      const teText = document.getElementById('updateTe').value.trim();
+      
+      if (!enText) {
+        alert('English text is required');
+        return;
+      }
+
+      try {
+        await db.collection("updates").add({
+          en: enText,
+          te: teText || enText,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById('updateEn').value = '';
+        document.getElementById('updateTe').value = '';
+      } catch (error) {
+        alert('Error adding update: ' + error.message);
+      }
+    }
+
+    async function deleteUpdate(id) {
+      if (confirm('Delete this update?')) {
+        await db.collection("updates").doc(id).delete();
+      }
+    }
+
+    // ========== EVENTS ========== //
+    function loadEvents(lang) {
+      db.collection("events")
+        .orderBy("date", "desc")
+        .onSnapshot((snapshot) => {
+          const container = document.getElementById('eventsList');
+          container.innerHTML = '';
+          
+          if (snapshot.empty) {
+            container.innerHTML = '<p>No upcoming events</p>';
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const event = doc.data();
+            const eventElement = document.createElement('p');
+            
+            const eventDate = event.date ? 
+              new Date(event.date).toLocaleDateString() : 
+              'Date not set';
+            
+            eventElement.innerHTML = `
+              <strong>${eventDate}</strong>: ${event[lang] || event.en || 'No details'}
+              ${isAdmin ? `<span class="admin-controls">
+                <button class="delete-btn" onclick="deleteEvent('${doc.id}')">Delete</button>
+              </span>` : ''}
+            `;
+            
+            container.appendChild(eventElement);
+          });
+        }, (error) => {
+          console.error("Events error:", error);
+          document.getElementById('eventsList').innerHTML = 
+            '<p>Error loading events. Please try again.</p>';
+        });
+    }
+
+    async function addEvent() {
+      const date = document.getElementById('eventDate').value;
+      const enText = document.getElementById('eventEn').value.trim();
+      const teText = document.getElementById('eventTe').value.trim();
+      
+      if (!date || !enText) {
+        alert('Date and English description are required');
+        return;
+      }
+
+      try {
+        await db.collection("events").add({
+          en: enText,
+          te: teText || enText,
+          date: date,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById('eventDate').value = '';
+        document.getElementById('eventEn').value = '';
+        document.getElementById('eventTe').value = '';
+      } catch (error) {
+        alert('Error adding event: ' + error.message);
+      }
+    }
+
+    async function deleteEvent(id) {
+      if (confirm('Delete this event?')) {
+        await db.collection("events").doc(id).delete();
+      }
+    }
+
+    // ========== COMPLAINTS ========== //
+    function loadComplaints() {
+      db.collection("complaints")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) => {
+          complaintList.innerHTML = '<h3>Recent Complaints:</h3><ul></ul>';
+          const list = complaintList.querySelector('ul');
+          
+          if (snapshot.empty) {
+            list.innerHTML = '<li>No complaints yet</li>';
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const complaint = doc.data();
+            const li = document.createElement('li');
+            
+            li.innerHTML = `
+              <div>
+                <p>${complaint.text}</p>
+                <small>${complaint.timestamp?.toDate().toLocaleString()}</small>
+                <span class="status-badge ${complaint.status === 'resolved' ? 'status-resolved' : 'status-pending'}">
+                  ${complaint.status || 'pending'}
+                </span>
+              </div>
+              ${isAdmin ? `
+              <div class="admin-controls">
+                <button class="resolve-btn" onclick="updateComplaintStatus('${doc.id}', 'resolved')">
+                  Resolve
+                </button>
+                <button class="delete-btn" onclick="deleteComplaint('${doc.id}')">
+                  Delete
+                </button>
+              </div>
+              ` : ''}
+            `;
+            
+            list.appendChild(li);
+          });
+        }, (error) => {
+          console.error("Complaints error:", error);
+          complaintList.innerHTML = '<p>Error loading complaints. Please try again.</p>';
+        });
+    }
+
+    async function submitComplaint() {
+      const text = complaintInput.value.trim();
+      if (!text) return;
+
+      try {
+        await db.collection("complaints").add({
+          text: text,
+          status: "pending",
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        complaintInput.value = "";
+      } catch (error) {
+        alert("Error submitting complaint: " + error.message);
+      }
+    }
+
+    async function updateComplaintStatus(id, status) {
+      await db.collection("complaints").doc(id).update({ status: status });
+    }
+
+    async function deleteComplaint(id) {
+      if (confirm("Delete this complaint?")) {
+        await db.collection("complaints").doc(id).delete();
+      }
+    }
+
+    // ========== GALLERY ========== //
+    function loadGallery() {
+      db.collection("gallery")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) => {
+          const gallery = document.getElementById('gallery');
+          gallery.innerHTML = '';
+          
+          if (snapshot.empty) {
+            gallery.innerHTML = '<p>No images yet</p>';
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const image = doc.data();
+            const imgElement = document.createElement('img');
+            imgElement.src = image.url;
+            imgElement.onclick = () => window.open(image.url, '_blank');
+            
+            if (isAdmin) {
+              const deleteBtn = document.createElement('div');
+              deleteBtn.innerHTML = '&times;';
+              deleteBtn.style.position = 'absolute';
+              deleteBtn.style.top = '5px';
+              deleteBtn.style.right = '5px';
+              deleteBtn.style.background = 'red';
+              deleteBtn.style.color = 'white';
+              deleteBtn.style.borderRadius = '50%';
+              deleteBtn.style.width = '20px';
+              deleteBtn.style.height = '20px';
+              deleteBtn.style.display = 'flex';
+              deleteBtn.style.justifyContent = 'center';
+              deleteBtn.style.alignItems = 'center';
+              deleteBtn.style.cursor = 'pointer';
+              deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteImage(doc.id);
+              };
+              
+              const container = document.createElement('div');
+              container.style.position = 'relative';
+              container.appendChild(imgElement);
+              container.appendChild(deleteBtn);
+              
+              gallery.appendChild(container);
+            } else {
+              gallery.appendChild(imgElement);
+            }
+          });
+        }, (error) => {
+          console.error("Gallery error:", error);
+          document.getElementById('gallery').innerHTML = 
+            '<p>Error loading gallery. Please try again.</p>';
+        });
+    }
+
+    async function uploadImage() {
+      const file = document.getElementById('imageUpload').files[0];
+      if (!file) return;
+
+      try {
+        // Create storage reference
+        const storageRef = storage.ref(`gallery/${file.name + Date.now()}`);
+        
+        // Upload file
+        const uploadTask = await storageRef.put(file);
+        
+        // Get download URL
+        const url = await storageRef.getDownloadURL();
+        
+        // Save to Firestore
+        await db.collection("gallery").add({
+          url: url,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Clear file input
+        document.getElementById('imageUpload').value = '';
+      } catch (error) {
+        alert("Error uploading image: " + error.message);
+      }
+    }
+
+    async function deleteImage(id) {
+      if (confirm("Delete this image?")) {
+        await db.collection("gallery").doc(id).delete();
+      }
+    }
+
+    // ========== LANGUAGE HANDLING ========== //
+    languageSelector.addEventListener('change', () => {
+      const lang = languageSelector.value;
+      updateLanguageUI(lang);
+      loadContent(lang);
+    });
+
+    function updateLanguageUI(lang) {
+      document.getElementById('villageUpdatesTitle').textContent = 
+        lang === 'te' ? '📢 గ్రామ నవీకరణలు' : '📢 Village Updates';
+      
+      document.getElementById('nav-complaint').innerHTML = 
+        lang === 'te' ? 
+        '<i class="fas fa-comment-dots"></i> <span>ఫిర్యాదు ఎక్కు</span>' : 
+        '<i class="fas fa-comment-dots"></i> <span>Raise Complaint</span>';
+      
+      document.getElementById('complaintInput').placeholder = 
+        lang === 'te' ? 'మీ ఫిర్యాదును ఇక్కడ నమోదు చేయండి...' : 'Enter your complaint here...';
+    }
+
+    // ========== INITIALIZE ========== //
+    window.onload = () => {
+      // Set initial language
+      const lang = languageSelector.value;
+      updateLanguageUI(lang);
+      
+      // Load all content
+      loadContent(lang);
+      
+      // Add sample data if collections are empty (for first-time setup)
+      initializeSampleData();
+    };
+
+    async function initializeSampleData() {
+      // Only add samples if collections are empty
+      const [updates, events, gallery] = await Promise.all([
+        db.collection("updates").get(),
+        db.collection("events").get(),
+        db.collection("gallery").get()
+      ]);
+
+      if (updates.empty) {
+        await db.collection("updates").add({
+          en: "New water supply system being installed next week",
+          te: "కొత్త నీటి సరఫరా వ్యవస్థ తర్వాత వారం నుంచి ఏర్పాటు చేస్తున్నారు",
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      if (events.empty) {
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const eventDate = nextWeek.toISOString().split('T')[0];
+        
+        await db.collection("events").add({
+          en: "Village cleanup day - all residents please participate",
+          te: "గ్రామ శుభ్రత దినం - అందరు నివాసితులు దయచేసి పాల్గొనండి",
+          date: eventDate,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      if (gallery.empty) {
+        // Can't automatically add gallery images as they need to be uploaded
+        console.log("Gallery is empty - please upload some images");
+      }
+    }
+  </script>
+</body>
+</html>
